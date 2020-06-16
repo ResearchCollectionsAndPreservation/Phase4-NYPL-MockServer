@@ -40,7 +40,11 @@ public class RequestController {
         JobResponse jobResponse = requestService.getJobs(jobId);
         return  new ResponseEntity<JobResponse>(jobResponse, new HttpHeaders(), HttpStatus.OK);
     }
-
+    @PostMapping("/hold-requests")
+    public ResponseEntity<NYPLHoldResponse> nyplHoldRequestItem(@RequestBody NYPLHoldRequest nyplHoldRequest){
+        NYPLHoldResponse nyplHoldResponse = requestService.nyplHoldRequest(nyplHoldRequest);
+        return  new ResponseEntity<NYPLHoldResponse>(nyplHoldResponse, new HttpHeaders(), HttpStatus.OK);
+    }
     @GetMapping("/hold-requests/{trackingId}")
     public ResponseEntity<NYPLHoldResponse> nyplHoldItem(@PathVariable("trackingId") String trackingId){
         NYPLHoldResponse nyplHoldResponse = requestService.nyplHoldItem(trackingId);
@@ -75,7 +79,16 @@ public class RequestController {
         return  new ResponseEntity<CreateHoldResponse>(createHoldResponse, new HttpHeaders(), HttpStatus.OK);
     }
 
-
+  @PostMapping("/items/test/{itemIdentifier}")
+    public ResponseEntity<ItemInformationResponse> lookupItem(@RequestParam String itemIdentifier){
+        ItemInformationResponse itemInformationResponse = requestService.findItemByItemId(itemIdentifier);
+        return new ResponseEntity<ItemInformationResponse>(itemInformationResponse,new HttpHeaders(),HttpStatus.OK);
+  }
+  @GetMapping("/patrons")
+    public  ResponseEntity<PatronInformationResponse> lookupPatron(@RequestParam("barcode") String patronIdentifier){
+        PatronInformationResponse patronInformationResponse=requestService.findPatronByPatronId(patronIdentifier);
+        return new ResponseEntity<PatronInformationResponse>(patronInformationResponse,new HttpHeaders(),HttpStatus.OK);
+  }
   /*  @PostMapping("/recap/cancel-hold-requests")
     public ResponseEntity<CancelHoldResponse> cancelHoldItem(@RequestBody CancelHoldRequest cancelHoldRequest){
         CancelHoldResponse cancelHoldResponse = requestService.cancelHold(cancelHoldRequest);
