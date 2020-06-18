@@ -6,6 +6,8 @@ import com.nypl.mockServer.model.CheckoutData;
 import com.nypl.mockServer.JobData;
 import com.nypl.mockServer.Notice;
 import com.nypl.mockServer.model.HoldData;
+import com.nypl.mockServer.model.Item;
+import com.nypl.mockServer.model.Patron;
 import com.nypl.mockServer.request.*;
 import com.nypl.mockServer.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +111,7 @@ public class RequestServiceImpl implements RequestService {
         try {
             return jobRepository.findByJobId(jobId).getMessage();
         }catch (Exception e){
-            return "";
+            return "Can't Find JobId";
         }
     }
 
@@ -176,17 +178,28 @@ public class RequestServiceImpl implements RequestService {
     public NYPLHoldResponse nyplHoldItem(String trackingId) {
         NYPLHoldResponse nyplHoldResponse = new NYPLHoldResponse();
         NYPLHoldData nyplHoldData = new NYPLHoldData();
-        try{
-            if(holdDataRepository.findByTrackingId(trackingId)!=null) {
-                nyplHoldData.setCreatedDate(DateFormat());
-                nyplHoldData.setJobId("14");
-            }
-
-        }catch (Exception e){
-            nyplHoldData.setJobId("15");
-        }
+        nyplHoldData.setCreatedDate(DateFormat());
+        nyplHoldData.setJobId("14");
         nyplHoldResponse.setData(nyplHoldData);
         return nyplHoldResponse;
+    }
+
+    @Override
+    public NYPLHoldResponse nyplHoldRequest(NYPLHoldRequest nyplHoldRequest) {
+       NYPLHoldResponse nyplHoldResponse = new NYPLHoldResponse();
+       NYPLHoldData nyplHoldData = new NYPLHoldData();
+       nyplHoldData.setCreatedDate(DateFormat());
+       nyplHoldData.setNeededBy(nyplHoldRequest.getNeededBy());
+       nyplHoldData.setNumberOfCopies(nyplHoldRequest.getNumberOfCopies());
+       nyplHoldData.setNyplSource(nyplHoldRequest.getNyplSource());
+       nyplHoldData.setPatron(nyplHoldRequest.getPatron());
+       nyplHoldData.setPickupLocation(nyplHoldRequest.getPickupLocation());
+       nyplHoldData.setRecord(nyplHoldRequest.getRecord());
+       nyplHoldData.setRecordType(nyplHoldRequest.getRecordType());
+       nyplHoldData.setSuccess(true);
+       nyplHoldData.setJobId("16");
+       nyplHoldResponse.setData(nyplHoldData);
+       return nyplHoldResponse;
     }
 
     @Override
@@ -235,7 +248,72 @@ public class RequestServiceImpl implements RequestService {
         return cancelHoldResponse;
     }
 
+    public PatronInformationResponse findPatronByPatronId(String patronIdentifier) {
+        PatronInformationResponse patronInformationResponse = new PatronInformationResponse();
+        try {
+            Patron patron =patronRepository.findByPatronIdentifier(patronIdentifier);
+            if (patron!=null){
+                patronInformationResponse.setChargedItemsCount(patron.getChargedItemsCount());
+                patronInformationResponse.setChargedItemsLimit(patron.getChargedItemsLimit());
+                patronInformationResponse.setCurrencyType(patron.getCurrencyType());
+                patronInformationResponse.setEmailAddress(patron.getEmailAddress());
+                patronInformationResponse.setFeeAmount(patron.getFeeAmount());
+                patronInformationResponse.setFeeLimit(patron.getFeeLimit());
+                patronInformationResponse.setFineItemsCount(patron.getFineItemsCount());
+                patronInformationResponse.setHoldItemsCount(patron.getHoldItemsCount());
+                patronInformationResponse.setHoldItemsLimit(patron.getHoldItemsLimit());
+                patronInformationResponse.setHomeAddress(patron.getHomeAddress());
+                patronInformationResponse.setHomePhoneNumber(patron.getHomePhoneNumber());
+                patronInformationResponse.setId(patron.getId());
+                patronInformationResponse.setInstitutionId(patron.getInstitutionId());
+                patronInformationResponse.setLanguage(patron.getLanguage());
+                patronInformationResponse.setOverdueItemsCount(patron.getOverdueItemsCount());
+                patronInformationResponse.setOverdueItemsLimit(patron.getOverdueItemsLimit());
+                patronInformationResponse.setPatronIdentifier(patron.getPatronIdentifier());
+                patronInformationResponse.setPersonName(patron.getPersonName());
+                patronInformationResponse.setPrintLine(patron.getPrintLine());
+                patronInformationResponse.setRecallItemsCount(patron.getRecallItemsCount());
+                patronInformationResponse.setScreenMessage(patron.getScreenMessage());
+                patronInformationResponse.setTransactionDate(patron.getTransactionDate());
+                patronInformationResponse.setUnavailableHoldsCount(patron.getUnavailableHoldsCount());
+                patronInformationResponse.setValidPatron(patron.getValidPatron());
+                patronInformationResponse.setValidPatronPassword(patron.getValidPatronPassword());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return patronInformationResponse;
+    }
+    @Override
+    public ItemInformationResponse findItemByItemId(String itemIdentifier) {
+        ItemInformationResponse itemInformationResponse = new ItemInformationResponse();
+        try {
+            Item item = itemRepository.findByItemIdentifier(itemIdentifier);
+            if(item!=null) {
+               itemInformationResponse.setCirculationStatus(item.getCirculationStatus());
+               itemInformationResponse.setCurrentLocation(item.getCurrentLocation());
+               itemInformationResponse.setDueDate(item.getDueDate());
+               itemInformationResponse.setFeeType(item.getFeeType());
+               itemInformationResponse.setHoldPickupDate(item.getHoldPickupDate());
+               itemInformationResponse.setHoldQueueLength(item.getHoldQueueLength());
+               itemInformationResponse.setId(item.getId());
+               itemInformationResponse.setItemIdentifier(item.getItemIdentifier());
+               itemInformationResponse.setItemProperties(item.getItemProperties());
+               itemInformationResponse.setMediaType(item.getMediaType());
+               itemInformationResponse.setPermanentLocation(item.getPermanentLocation());
+               itemInformationResponse.setPrineLine(item.getPrineLine());
+               itemInformationResponse.setRecalDate(item.getRecalDate());
+               itemInformationResponse.setScreenMessage(item.getScreenMessage());
+               itemInformationResponse.setSecurityMarker(item.getSecurityMarker());
+               itemInformationResponse.setTitleIdentifier(item.getTitleIdentifier());
+               itemInformationResponse.setTransactionDate(item.getTransactionDate());
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return itemInformationResponse;
+    }
 
     private String DateFormat(){
         Date date = new Date();

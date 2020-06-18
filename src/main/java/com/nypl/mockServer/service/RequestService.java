@@ -2,7 +2,7 @@ package com.nypl.mockServer.service;
 
 import com.nypl.mockServer.request.*;
 import com.nypl.mockServer.response.*;
-import org.springframework.stereotype.Service;
+
 
 /**
  * Created by giris on 10/3/20.
@@ -17,5 +17,8 @@ public interface RequestService {
      RecallResponse recallItem(RecallRequest recallRequest);
      RefileResponse refileItem(RefileRequest refileRequest);
      NYPLHoldResponse nyplHoldItem(String trackingId);
+     NYPLHoldResponse nyplHoldRequest(NYPLHoldRequest nyplHoldRequest);
      CreateHoldResponse createHoldItem(CreateHoldRequest createHoldRequest);
+     ItemInformationResponse findItemByItemId(String itemIdentifier);
+     PatronInformationResponse findPatronByPatronId(String patronIdentifier);
 }
