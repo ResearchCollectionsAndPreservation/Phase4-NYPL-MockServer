@@ -36,4 +36,3 @@ chmod -R 750 $PROJ_DIR_TAG \
 
 ln -s $PROJ_DIR_TAG/target/mockServer-0.0.1-SNAPSHOT.jar /etc/init.d/phase4-scsb-mock-nypl-server
 cp $PROJ_DIR_TAG/target/mockServer-0.0.1-SNAPSHOT.jar /opt
-
