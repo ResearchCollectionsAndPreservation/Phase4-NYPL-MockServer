@@ -3,7 +3,7 @@
 FROM adoptopenjdk/openjdk11
 
 MAINTAINER HTC ReCAP Support "recap-support@htcindia.com"
-
+RUN apt-get update && apt-get install -y git
 ARG TAG
 ENV envTag="$TAG"
 COPY shellBuild.sh /opt/
